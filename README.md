@@ -13,7 +13,7 @@ ResumeSmart is a production-ready, highly advanced career assistant that upgrade
   <!-- USER: Replace 'dashboard.png' with your actual screenshot filename in the images folder -->
   <img src="static/images/dashboard-preview.png" alt="ResumeSmart Premium Dashboard Screenshot" width="850" style="border-radius: 10px; box-shadow: 0 4px 15px rgba(99,102,241,0.5);"/>
   <br><br>
-  <i>(Tip: Add a screenshot of the new Deep Midnight UI here!)</i>
+  
 </div>
 
 ---
@@ -118,4 +118,4 @@ Want to add a new AI module to the ecosystem?
 4. Ensure components follow the `glass-card` styling in `style.css`.
 
 ---
-*ResumeSmart — Built to help you land your dream job.*
+*ResumeSmart — Built to help you land your dream job. Developed by AARTHI V G.*
