@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Templates - ResumeSmart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .template-card {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        .template-preview {
+            width: 100%;
+            height: 380px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            position: relative;
+        }
+        .template-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .template-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        /* Preview designs */
+        .preview-content {
+            padding: 2rem;
+            width: 100%;
+            height: 100%;
+            background: white;
+            color: #333;
+            font-size: 6px;
+            overflow: hidden;
+            text-align: left;
+        }
+        .preview-modern { border-top: 5px solid #667eea; }
+        .preview-classic { border: 1px solid #ccc; font-family: 'Times New Roman', serif; }
+        .preview-minimalist { background: #fdfdfd; padding: 3rem; }
+        .preview-creative { background: #fafafa; border-left: 20px solid #f093fb; }
+        .preview-tech { background: #1a202c; color: #43e97b; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="logo" style="text-decoration: none;">📄 ResumeSmart Templates</a>
+                <a href="/builder" class="btn btn-primary">Start Building</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding: 4rem 20px;">
+        <h2 class="section-title text-center">10 Premium Resume Templates</h2>
+        <p class="section-subtitle text-center">Select a design that fits your professional style</p>
+
+        <div class="template-grid">
+            <!-- 1. Modern -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <span class="template-badge">Popular</span>
+                    <div class="preview-content preview-modern">
+                        <h1 style="font-size: 14px;">JOHN DOE</h1>
+                        <p>Software Engineer</p>
+                        <hr>
+                        <p><b>Summary:</b> Experienced dev...</p>
+                        <p><b>Experience:</b> Senior Dev at TechCo...</p>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Modern Professional</h4>
+                    <p>Clean, balanced, and highly readable</p>
+                    <a href="/builder?template=modern" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 2. Classic -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content preview-classic">
+                        <center><h1 style="font-size: 14px;">JOHN DOE</h1></center>
+                        <hr>
+                        <p><b>EXPERIENCE</b></p>
+                        <p>Consultant | Firm | 2020</p>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Classic Elegant</h4>
+                    <p>Timeless design for traditional industries</p>
+                    <a href="/builder?template=classic" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 3. Minimalist -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content preview-minimalist">
+                        <h1 style="font-size: 14px; margin-bottom: 2rem;">John Doe</h1>
+                        <p>Developer</p>
+                        <p>Skills: Python, SQL...</p>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Minimalist Clean</h4>
+                    <p>Focuses entirely on your content</p>
+                    <a href="/builder?template=minimalist" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 4. Creative -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content preview-creative">
+                        <h1 style="font-size: 14px;">JOHN DOE</h1>
+                        <p>Graphic Designer</p>
+                        <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                            <div style="width: 30%; background:#eee; height: 100px;"></div>
+                            <div style="width: 70%;">Projects summary...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Creative Bold</h4>
+                    <p>Stand out with a unique sidebar design</p>
+                    <a href="/builder?template=creative" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 5. Tech -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content preview-tech">
+                        <h1 style="font-size: 14px;">> JOHN_DOE</h1>
+                        <p>$ roles: ["Software Engineer"]</p>
+                        <p>> skills: ["C++", "Docker", "K8s"]</p>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Technologist</h4>
+                    <p>Ideal for hackers and technical roles</p>
+                    <a href="/builder?template=tech" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 6. Executive -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content">
+                        <div style="background: #2d3748; color: white; padding: 10px;">
+                            <h1 style="font-size: 14px;">JOHN DOE</h1>
+                        </div>
+                        <p style="margin-top: 1rem;">Chief Technology Officer</p>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Executive</h4>
+                    <p>Dignified layout for senior management</p>
+                    <a href="/builder?template=executive" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 7. Academic -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content">
+                        <h1 style="font-size: 12px; border-bottom: 2px solid #000;">CURRICULUM VITAE</h1>
+                        <p><b>John Doe, Ph.D.</b></p>
+                        <p>Education: Stanford University</p>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Academic / CV</h4>
+                    <p>Formal layout for research and academia</p>
+                    <a href="/builder?template=academic" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 8. Compact -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                        <div style="border-right: 1px solid #ccc;">
+                            <h1>John Doe</h1>
+                            <p>dev.doe@email.com</p>
+                        </div>
+                        <div>
+                            <p>High impact summary here...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Compact</h4>
+                    <p>Perfect for fitting a lot on one page</p>
+                    <a href="/builder?template=compact" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 9. Startup -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content" style="font-family: 'Helvetica', sans-serif;">
+                        <span style="background: #f093fb; padding: 2px; border-radius: 4px;">DOE.JS</span>
+                        <h1 style="font-size: 14px; margin-top: 5px;">Full Stack Ninja</h1>
+                        <p>Turning caffeine into code since 2015</p>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Startup / Trendy</h4>
+                    <p>Vibrant design for modern tech companies</p>
+                    <a href="/builder?template=startup" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+
+            <!-- 10. Simple -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-content">
+                        <h1>John Doe</h1>
+                        <p>Simple Resume</p>
+                        <p>Address: 123 Street, City</p>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h4>Entry Level / Simple</h4>
+                    <p>No-nonsense design for your first job</p>
+                    <a href="/builder?template=simple" class="btn btn-secondary btn-block">Use This Template</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 ResumeSmart. Helping you succeed.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

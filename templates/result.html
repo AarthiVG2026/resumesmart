@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Dashboard - ResumeSmart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body style="font-family: 'Outfit', sans-serif;">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="logo" style="text-decoration: none;">ResumeSmart <span style="font-weight: 300; opacity: 0.7;">Dashboard</span></a>
+                <div class="nav-actions">
+                    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                        <span class="sun-icon">☀️</span>
+                        <span class="moon-icon">🌙</span>
+                    </button>
+                    <a href="/" class="btn btn-secondary" style="padding: 0.5rem 1rem;">New Analysis</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="premium-grid">
+            <!-- Main Content Area -->
+            <div class="results-main">
+                
+                <!-- Score & Trust Header -->
+                <section class="summary-section">
+                    <div class="summary-grid">
+                        <div class="summary-card glass-card ats-card">
+                            <h3>ATS Master Score</h3>
+                            <div class="score-number" style="font-size: 4rem;">{{ result.ats_score }}</div>
+                            <p class="score-label">Optimized for: <strong>{{ result.target_role or 'General ATS' }}</strong></p>
+                            
+                            {% if result.security_scan %}
+                            <div class="security-badge {{ 'security-safe' if result.security_scan.status == 'Safe' else 'security-caution' }}">
+                                <span>{{ '🛡️' if result.security_scan.status == 'Safe' else '⚠️' }}</span>
+                                <span>JD Trust: {{ result.security_scan.status }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="summary-card glass-card">
+                            <h3>Personality Profile</h3>
+                            <div class="personality-list" style="text-align: left; margin-top: 1rem;">
+                                {% for trait, score in result.personality.items() %}
+                                <div class="personality-bar-container">
+                                    <div class="personality-label">
+                                        <span>{{ trait }}</span>
+                                        <span>{{ score }}%</span>
+                                    </div>
+                                    <div class="personality-bar">
+                                        <div class="personality-fill" style="width: {{ score }}%;"></div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Interview Simulator Widget -->
+                <section class="glass-card simulator-card">
+                    <h3 class="card-title">💡 Role-Based Interview Simulator</h3>
+                    
+                    <div id="interviewIntro">
+                        <p>Practice technical and behavioral questions tailored specifically to your resume and target role.</p>
+                        <button id="startInterview" class="btn btn-primary" style="margin-top: 1rem;">Start Simulated Interview</button>
+                    </div>
+
+                    <div id="interviewActive" style="display: none;">
+                        <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                            <span id="interviewTopic" class="priority-badge" style="margin-bottom: 0.5rem; display: inline-block;"></span>
+                            <h4 id="interviewQuestion" style="font-size: 1.25rem;"></h4>
+                        </div>
+                        <textarea id="interviewAnswer" class="form-textarea" rows="4" placeholder="Type your response here..."></textarea>
+                        <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                            <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary">Submit for AI Evaluation</button>
+                            <span id="interviewProgress" style="align-self: center; opacity: 0.7;"></span>
+                        </div>
+                    </div>
+
+                    <div id="interviewFeedback" style="display: none;">
+                        <h4>Evaluation Results</h4>
+                        <div class="summary-grid" style="margin: 1.5rem 0;">
+                            <div class="glass-card" style="padding: 1rem;">
+                                <div id="confScore" style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);"></div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">Confidence</div>
+                            </div>
+                            <div class="glass-card" style="padding: 1rem;">
+                                <div id="clarScore" style="font-size: 1.5rem; font-weight: 700; color: var(--secondary-color);"></div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">Clarity</div>
+                            </div>
+                            <div class="glass-card" style="padding: 1rem;">
+                                <div id="relScore" style="font-size: 1.5rem; font-weight: 700; color: var(--success-color);"></div>
+                                <div style="font-size: 0.8rem; opacity: 0.7;">Relevance</div>
+                            </div>
+                        </div>
+                        <p id="feedbackText" style="font-style: italic; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;"></p>
+                        <button onclick="nextQuestion()" class="btn btn-secondary" style="margin-top: 1rem;">Next Question →</button>
+                    </div>
+                </section>
+
+                <!-- Deep Analysis: STAR and Heatmap -->
+                <div class="summary-grid" style="grid-template-columns: 1.5fr 1fr; margin-top: 2rem;">
+                    <section class="glass-card">
+                        <h3 class="card-title">✨ Bullet Point Improvement (STAR)</h3>
+                        <div class="bullets-list">
+                            {% for bullet in result.star_results %}
+                            <div class="bullet-item" style="flex-direction: column; align-items: flex-start; gap: 0.8rem;">
+                                <div style="display: flex; justify-content: space-between; width: 100%;">
+                                    <span class="star-badge star-{{ bullet.status.lower() }}">{{ bullet.status }}</span>
+                                    <span style="opacity: 0.6; font-size: 0.8rem;">{{ bullet.score }}/3 Points</span>
+                                </div>
+                                <p style="font-size: 0.95rem;">{{ bullet.bullet }}</p>
+                                {% if bullet.missing %}
+                                <div style="font-size: 0.85rem; color: var(--error-color);">
+                                    Missing: {{ bullet.missing|join(', ') }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section class="glass-card">
+                        <h3 class="card-title">👁️ Recruiter Heatmap (F-Pattern Simulation)</h3>
+                        <div class="heatmap-instruction">
+                            <strong>Did you know?</strong> Recruiters spend an average of 7 seconds scanning a resume in an "F" pattern (Top, Left-side, and Bullet Starts).<br>
+                            <em>This simulation highlights the exact areas where recruiter's eyes will focus the hardest on your resume. Critical keywords should be placed in the red zones!</em>
+                        </div>
+                        <div class="heatmap-container" style="max-height: 600px; overflow-y: auto; overflow-x: hidden; position: relative; padding-right: 15px;">
+                            <div class="heatmap-overlay"></div>
+                            <div class="heatmap-text">
+                                {{ result.full_text[:4000] if result.full_text else 'Resume text preview unavailable. Please ensure your PDF is text-based.' }}...
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; display: flex; gap: 1rem; font-size: 0.9rem; justify-content: center; background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 8px;">
+                            <span style="display:flex; align-items:center;"><span style="width:12px;height:12px;background:rgba(255,0,0,0.6);display:inline-block;margin-right:8px;border-radius:2px;"></span> Primary Focus (Needs Impact)</span>
+                            <span style="display:flex; align-items:center;"><span style="width:12px;height:12px;background:rgba(255,255,0,0.3);display:inline-block;margin-right:8px;border-radius:2px;"></span> Secondary Scan</span>
+                            <span style="display:flex; align-items:center;"><span style="width:12px;height:12px;background:rgba(0,0,255,0.2);display:inline-block;margin-right:8px;border-radius:2px;"></span> Low Attention Region</span>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Strategic Roadmap -->
+                <section class="glass-card" style="margin-top: 2rem;">
+                    <h3 class="card-title">🗺️ Career Growth Roadmap</h3>
+                    <div class="roadmap-list">
+                        {% for step in result.roadmap %}
+                        <div class="suggestion-item priority-medium" style="margin-bottom: 1rem;">
+                            <div class="suggestion-header">
+                                <span class="priority-badge">Step {{ loop.index }}</span>
+                                <h4>{{ step }}</h4>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Sidebar -->
+            <div class="copilot-sidebar">
+                <!-- Action Hub -->
+                <div class="glass-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), transparent);">
+                    <h3>🚀 Quick Actions</h3>
+                    <div class="action-buttons" style="margin-top: 1.5rem;">
+                        <a href="/export/portfolio" class="btn btn-primary" style="width: 100%; border-radius: 50px;">
+                            <span>🌐 Export AI Portfolio</span>
+                        </a>
+                        <a href="/download_report" class="btn btn-secondary" style="width: 100%; border-radius: 50px; margin-top: 10px;">
+                            <span>📥 Download PDF Analysis</span>
+                        </a>
+                        <a href="/builder" class="btn btn-secondary" style="width: 100%; border-radius: 50px; margin-top: 10px;">
+                            <span>✍️ Open Resume Builder</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating AI Copilot Widget -->
+    <div id="chatbotToggleBtn" class="chatbot-toggle-btn">
+        <span style="font-size: 1.8rem; filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));">💬</span>
+    </div>
+
+    <div id="copilotChatWindow" class="floating-chat hidden">
+        <div style="padding: 1.2rem; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between; background: rgba(99, 102, 241, 0.2); border-radius: 20px 20px 0 0;">
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <div style="width: 12px; height: 12px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981;"></div>
+                <h4 style="margin: 0; font-size: 1.1rem;">AI Career Copilot</h4>
+            </div>
+            <button id="closeCopilotBtn" style="background:none; border:none; color:white; font-size: 1.2rem; cursor:pointer;">✖</button>
+        </div>
+        <div id="copilotHistory" class="chat-history" style="flex:1; overflow-y:auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+            <div class="chat-msg bot-msg">
+                <div class="msg-bubble">Hi! I'm your AI Career Copilot. Ask me anything about your ATS score, what skills you are missing, or ask for interview tips!</div>
+            </div>
+        </div>
+        <div class="chat-input-area" style="padding: 1rem; border-top: 1px solid var(--glass-border); display: flex; gap: 0.5rem; background: rgba(0,0,0,0.2); border-radius: 0 0 20px 20px;">
+            <input type="text" id="copilotInput" placeholder="Message Copilot..." style="flex: 1; padding: 0.8rem; border-radius: 20px; outline: none; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border);">
+            <button id="copilotSend" class="btn btn-primary" style="padding: 0 1.2rem; border-radius: 20px;">➤</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 ResumeSmart Premium AI. All systems operational. Landing your dream job is our priority.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/premium.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder - ResumeSmart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .builder-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .form-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .section-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .step-dot.active {
+            background: var(--primary-color);
+            transform: scale(1.2);
+        }
+        .dynamic-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+        .remove-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--error-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="logo" style="text-decoration: none;">📄 ResumeSmart Builder</a>
+                <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                    <span class="sun-icon">☀️</span>
+                    <span class="moon-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="builder-container">
+        <div class="glass-card">
+            <h2 class="section-title text-center">Create Your Resume</h2>
+            <p class="section-subtitle text-center">Fill in your details below to generate a professional resume</p>
+            
+            <div class="step-indicator">
+                <div class="step-dot active" data-step="1"></div>
+                <div class="step-dot" data-step="2"></div>
+                <div class="step-dot" data-step="3"></div>
+                <div class="step-dot" data-step="4"></div>
+                <div class="step-dot" data-step="5"></div>
+            </div>
+
+            <form id="resumeForm" action="/generate_resume" method="POST">
+                <!-- Section 1: Personal Info -->
+                <div class="form-section active" id="step1">
+                    <h3 class="card-title">👤 Personal Information</h3>
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="full_name" class="form-textarea" placeholder="John Doe">
+                    </div>
+                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-textarea" placeholder="john@example.com">
+                        </div>
+                        <div>
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" name="phone" class="form-textarea" placeholder="+1 234 567 890">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" name="location" class="form-textarea" placeholder="New York, USA">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Links (LinkedIn, Portfolio, etc.)</label>
+                        <input type="text" name="links" class="form-textarea" placeholder="linkedin.com/in/johndoe, portfolio.com">
+                    </div>
+                </div>
+
+                <!-- Section 2: Summary -->
+                <div class="form-section" id="step2">
+                    <h3 class="card-title">📝 Professional Summary</h3>
+                    <div class="form-group">
+                        <label class="form-label">Write a brief summary of your career and goals</label>
+                        <textarea name="summary" class="form-textarea" rows="6" placeholder="Experienced Software Engineer with a passion for building scalable web applications..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Section 3: Experience -->
+                <div class="form-section" id="step3">
+                    <h3 class="card-title">💼 Work Experience</h3>
+                    <div id="experienceList">
+                        <!-- Dynamic items will be added here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addExperience()">
+                        <span>➕ Add Experience</span>
+                    </button>
+                </div>
+
+                <!-- Section 4: Education -->
+                <div class="form-section" id="step4">
+                    <h3 class="card-title">🎓 Education</h3>
+                    <div id="educationList">
+                        <!-- Dynamic items will be added here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addEducation()">
+                        <span>➕ Add Education</span>
+                    </button>
+                </div>
+
+                <!-- Section 5: Skills & Projects -->
+                <div class="form-section" id="step5">
+                    <h3 class="card-title">🚀 Skills & Projects</h3>
+                    <div class="form-group">
+                        <label class="form-label">Skills (Comma separated)</label>
+                        <textarea name="skills" class="form-textarea" rows="3" placeholder="Python, React, SQL, Project Management..."></textarea>
+                    </div>
+                    <h3 class="card-title" style="margin-top: 2rem;">📂 Projects</h3>
+                    <div id="projectList"></div>
+                    <button type="button" class="btn btn-secondary" onclick="addProject()">
+                        <span>➕ Add Project</span>
+                    </button>
+
+                    <h3 class="card-title" style="margin-top: 2rem;">🎨 Choose Template</h3>
+                    <div class="form-group">
+                        <select name="template_id" class="form-textarea">
+                            <option value="modern">Modern Professional</option>
+                            <option value="classic">Classic Elegant</option>
+                            <option value="minimalist">Minimalist Clean</option>
+                            <option value="creative">Creative Bold</option>
+                            <option value="executive">Executive Corporate</option>
+                            <option value="tech">Technologist (Dark/Neon)</option>
+                            <option value="academic">Academic / CV</option>
+                            <option value="entry">Entry Level / Simple</option>
+                            <option value="startup">Startup / Trendy</option>
+                            <option value="compact">Compact / Single Page</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-nav">
+                    <button type="button" id="prevBtn" class="btn btn-secondary" onclick="changeStep(-1)" disabled>Previous</button>
+                    <button type="button" id="nextBtn" class="btn btn-primary" onclick="changeStep(1)">Next</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary" style="display: none;">Generate Resume</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        function validateStep() {
+            if (currentStep === 1) {
+                const name = document.querySelector('input[name="full_name"]').value;
+                const email = document.querySelector('input[name="email"]').value;
+                if (!name || !email) {
+                    alert('Please fill in your Name and Email in Step 1');
+                    return false;
+                }
+            }
+            // Add more validations for other steps if needed
+            return true;
+        }
+
+        function changeStep(n) {
+            if (n > 0 && !validateStep()) return;
+
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.querySelector(`.step-dot[data-step="${currentStep}"]`).classList.remove('active');
+            
+            currentStep += n;
+            
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            document.querySelector(`.step-dot[data-step="${currentStep}"]`).classList.add('active');
+            
+            document.getElementById('prevBtn').disabled = (currentStep === 1);
+            
+            if (currentStep === totalSteps) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'flex';
+            } else {
+                document.getElementById('nextBtn').style.display = 'flex';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+        }
+
+        document.getElementById('resumeForm').addEventListener('submit', function(e) {
+            if (!validateStep()) {
+                e.preventDefault();
+                return;
+            }
+            // Just show feedback, don't disable button immediately to avoid request cancellation
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '⏳ Processing...';
+            setTimeout(() => {
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.pointerEvents = 'none';
+            }, 50);
+        });
+ Broadway
+
+        function addExperience() {
+            const list = document.getElementById('experienceList');
+            const item = document.createElement('div');
+            item.className = 'dynamic-item';
+            item.innerHTML = `
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+                <div class="form-group"><input type="text" name="exp_title[]" class="form-textarea" placeholder="Job Title"></div>
+                <div class="form-group"><input type="text" name="exp_company[]" class="form-textarea" placeholder="Company Name"></div>
+                <div class="form-group"><input type="text" name="exp_duration[]" class="form-textarea" placeholder="Jan 2020 - Present"></div>
+                <div class="form-group"><textarea name="exp_desc[]" class="form-textarea" rows="3" placeholder="Describe your responsibilities and achievements..."></textarea></div>
+            `;
+            list.appendChild(item);
+        }
+
+        function addEducation() {
+            const list = document.getElementById('educationList');
+            const item = document.createElement('div');
+            item.className = 'dynamic-item';
+            item.innerHTML = `
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+                <div class="form-group"><input type="text" name="edu_degree[]" class="form-textarea" placeholder="Degree / Certification"></div>
+                <div class="form-group"><input type="text" name="edu_school[]" class="form-textarea" placeholder="University / Institution"></div>
+                <div class="form-group"><input type="text" name="edu_year[]" class="form-textarea" placeholder="Year of Completion"></div>
+            `;
+            list.appendChild(item);
+        }
+
+        function addProject() {
+            const list = document.getElementById('projectList');
+            const item = document.createElement('div');
+            item.className = 'dynamic-item';
+            item.innerHTML = `
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">✕</button>
+                <div class="form-group"><input type="text" name="proj_title[]" class="form-textarea" placeholder="Project Title"></div>
+                <div class="form-group"><textarea name="proj_desc[]" class="form-textarea" rows="2" placeholder="Brief project description..."></textarea></div>
+            `;
+            list.appendChild(item);
+        }
+
+        // Initialize with one experience and education
+        addExperience();
+        addEducation();
+    </script>
+</body>
+</html>
