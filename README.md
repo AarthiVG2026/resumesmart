@@ -26,6 +26,14 @@ ResumeSmart is a production-ready, highly advanced career assistant that upgrade
 *   **👁️ Recruiter Heatmap**: Visualizes the F-pattern reading behavior of recruiters directly over your resume text.
 *   **🛡️ Job Description Trust Scanner**: Uses security patterns to scan pasted job descriptions for phishing links, scam tactics, and professional red flags.
 *   **💬 Career Copilot Chatbot**: A persistent AI companion in your dashboard that provides on-the-fly career advice and missing skill roadmaps.
+        
+<div align="center">
+  <br>
+  <!-- USER: Replace 'chatbot.png' with your actual screenshot filename in the images folder -->
+  <img src="static/images/chatbot-preview.png" alt="ResumeSmart Career Copilot" width="700" style="border-radius: 10px;"/>
+  <br>
+</div>
+
 *   **🎤 Interactive Interview Simulator**: Generates role-tailored technical and behavioral questions based on your specific resume context. Evaluates your typed answers for confidence, clarity, and relevance.
 *   **🌐 1-Click Portfolio Exporter**: Seamlessly converts your optimized resume into a sleek, deployable static HTML/CSS personal portfolio.
 *   **📄 Bulletproof PDF Parsing**: Avoids standard parsing crashes by cascading through 3 robust engines: `pdfplumber` ➔ `PyPDF2` ➔ `pdfminer`.
@@ -35,13 +43,6 @@ ResumeSmart is a production-ready, highly advanced career assistant that upgrade
 ## 🎨 UI/UX Excellence
 
 We care about aesthetics just as much as algorithms. ResumeSmart runs exclusively in a **Deep Midnight Glassmorphism** theme by default. Be greeted by deeply saturated indigo gradients, glowing interactive components, neon skill badges, and a meticulously crafted premium layout.
-
-<div align="center">
-  <br>
-  <!-- USER: Replace 'chatbot.png' with your actual screenshot filename in the images folder -->
-  <img src="static/images/chatbot-preview.png" alt="ResumeSmart Career Copilot" width="700" style="border-radius: 10px;"/>
-  <br>
-</div>
 
 ---
 
